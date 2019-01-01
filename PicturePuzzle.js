@@ -2,7 +2,7 @@
 class PicturePuzzle {
   constructor(el, imageSrc, dimension, canvasWidth = 600) {
     this.el = el;
-    this.wrapperEl = this.createWrapper();
+    this.wrapperEl = PicturePuzzle.createWrapper();
     this.cells = [];
     this.imageSrc = imageSrc;
     this.dimension = dimension;
@@ -13,15 +13,13 @@ class PicturePuzzle {
     this.blockHeight = -1;
 
     this.image = new Image();
-    this.image.onload = () => {
-      this.setup();
-    }
+    this.image.onload = this.setup.bind(this);
     this.image.src = imageSrc;
 
     this.el.appendChild(this.wrapperEl);
   }
 
-  createWrapper() {
+  static createWrapper() {
     let el = document.createElement('div');
     el.classList.add('picture-puzzle');
     return el;
