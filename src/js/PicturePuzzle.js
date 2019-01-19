@@ -1,4 +1,4 @@
-class PicturePuzzle {
+export default class PicturePuzzle {
   constructor(el, imageSrc, dimension, canvasWidth = 600) {
     this.container = el;
     this.el = PicturePuzzle.createWrapper();
