@@ -4,6 +4,9 @@ export default class PicturePuzzle {
   constructor(el, imageSrc, dimension, canvasWidth = 600) {
     this.container = el;
     this.el = PicturePuzzle.createWrapper();
+
+    this.shuffleLevel = 100;
+    this.onDone = () => {};
     /**
      * @type Cell[]
      */
@@ -51,7 +54,7 @@ export default class PicturePuzzle {
   }
 
   shuffle() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < this.shuffleLevel; i++) {
       let sides = [];
       let index = this.getEmptyIndex();
       let cell = this.cells[index];
@@ -74,7 +77,7 @@ export default class PicturePuzzle {
         sides.push('bottom');
       }
 
-      let sideIndex = Math.round(Math.random() * sides.length);
+      let sideIndex = Math.round(Math.random() * (sides.length - 1));
       let secondIndex = 0;
       switch (sides[sideIndex]) {
         case 'left':
@@ -92,7 +95,8 @@ export default class PicturePuzzle {
         default:
           break
       }
-      console.log(index, sides[sideIndex], secondIndex);
+      // console.log(x, y, sides);
+      // console.log(index, sides[sideIndex], secondIndex);
       this.swapCells(index, secondIndex);
     }
 
@@ -113,18 +117,17 @@ export default class PicturePuzzle {
     this.cells[i] = this.cells[j];
     this.cells[j] = tmp;
 
-    try {
-      this.cells[i].setIndex(i);
-    } catch (e) {
-      console.log(i, e);
-    }
+    this.cells[i].setIndex(i);
     this.cells[j].setIndex(j);
 
     this.cells[i].setPosition(i);
     this.cells[j].setPosition(j, animate);
 
-    console.log(this.cells);
-    console.log(this.isFullyDone());
+    if (this.isFullyDone() && animate) {
+      if (typeof this.onDone === 'function'){
+        this.onDone();
+      }
+    }
   }
 
   isFullyDone() {
