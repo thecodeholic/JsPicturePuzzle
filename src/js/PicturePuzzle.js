@@ -5,7 +5,7 @@ export default class PicturePuzzle {
     this.container = el;
     this.el = PicturePuzzle.createWrapper();
 
-    this.shuffleLevel = 1;
+    this.shuffleLevel = 100;
     this.onSwap = () => {};
     this.onDone = () => {};
     /**
