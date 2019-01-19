@@ -4,6 +4,9 @@ export default class PicturePuzzle {
   constructor(el, imageSrc, dimension, canvasWidth = 600) {
     this.container = el;
     this.el = PicturePuzzle.createWrapper();
+    /**
+     * @type Cell[]
+     */
     this.cells = [];
     this.imageSrc = imageSrc;
     this.dimension = dimension;
@@ -48,10 +51,55 @@ export default class PicturePuzzle {
   }
 
   shuffle() {
-    for (let i = this.cells.length - 1; i >= 0; i--) {
-      let random = Math.floor(Math.random() * i);
-      this.swapCells(i, random);
+    for (let i = 0; i < 100; i++) {
+      let sides = [];
+      let index = this.getEmptyIndex();
+      let cell = this.cells[index];
+      const {x, y} = cell.getXY();
+      if (x === 2) {
+        sides.push('left');
+      } else if (x === 0) {
+        sides.push('right');
+      } else {
+        sides.push('left');
+        sides.push('right');
+      }
+
+      if (y === 2) {
+        sides.push('top');
+      } else if (y === 0) {
+        sides.push('bottom')
+      } else {
+        sides.push('top');
+        sides.push('bottom');
+      }
+
+      let sideIndex = Math.round(Math.random() * sides.length);
+      let secondIndex = 0;
+      switch (sides[sideIndex]) {
+        case 'left':
+          secondIndex = index - 1;
+          break;
+        case 'right':
+          secondIndex = index + 1;
+          break;
+        case 'top':
+          secondIndex = index - this.dimension;
+          break;
+        case 'bottom':
+          secondIndex = index + this.dimension;
+          break;
+        default:
+          break
+      }
+      console.log(index, sides[sideIndex], secondIndex);
+      this.swapCells(index, secondIndex);
     }
+
+    // for (let i = this.cells.length - 1; i >= 0; i--) {
+    //   let random = Math.floor(Math.random() * i);
+    //   this.swapCells(i, random);
+    // }
   }
 
   displayCells() {
@@ -65,12 +113,27 @@ export default class PicturePuzzle {
     this.cells[i] = this.cells[j];
     this.cells[j] = tmp;
 
-    this.cells[i].setIndex(i);
+    try {
+      this.cells[i].setIndex(i);
+    } catch (e) {
+      console.log(i, e);
+    }
     this.cells[j].setIndex(j);
 
     this.cells[i].setPosition(i);
     this.cells[j].setPosition(j, animate);
+
     console.log(this.cells);
+    console.log(this.isFullyDone());
+  }
+
+  isFullyDone() {
+    for (let cell of this.cells) {
+      if (cell.index !== cell.originalIndex) {
+        return false;
+      }
+    }
+    return true;
   }
 
   getEmptyIndex() {
