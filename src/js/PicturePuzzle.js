@@ -5,7 +5,8 @@ export default class PicturePuzzle {
     this.container = el;
     this.el = PicturePuzzle.createWrapper();
 
-    this.shuffleLevel = 100;
+    this.shuffleLevel = 1;
+    this.onSwap = () => {};
     this.onDone = () => {};
     /**
      * @type Cell[]
@@ -54,12 +55,19 @@ export default class PicturePuzzle {
   }
 
   shuffle() {
+    if (this.shuffleLevel === false){
+      for (let i = this.cells.length - 1; i >= 0; i--) {
+        let random = Math.floor(Math.random() * i);
+        this.swapCells(i, random);
+      }
+      return;
+    }
     for (let i = 0; i < this.shuffleLevel; i++) {
       let sides = [];
       let index = this.getEmptyIndex();
       let cell = this.cells[index];
       const {x, y} = cell.getXY();
-      if (x === 2) {
+      if (x === this.dimension - 1) {
         sides.push('left');
       } else if (x === 0) {
         sides.push('right');
@@ -68,7 +76,7 @@ export default class PicturePuzzle {
         sides.push('right');
       }
 
-      if (y === 2) {
+      if (y === this.dimension - 1) {
         sides.push('top');
       } else if (y === 0) {
         sides.push('bottom')
@@ -100,10 +108,6 @@ export default class PicturePuzzle {
       this.swapCells(index, secondIndex);
     }
 
-    // for (let i = this.cells.length - 1; i >= 0; i--) {
-    //   let random = Math.floor(Math.random() * i);
-    //   this.swapCells(i, random);
-    // }
   }
 
   displayCells() {
@@ -123,10 +127,12 @@ export default class PicturePuzzle {
     this.cells[i].setPosition(i);
     this.cells[j].setPosition(j, animate);
 
+    if (animate){
+      this.triggerEvent('onSwap');
+    }
+
     if (this.isFullyDone() && animate) {
-      if (typeof this.onDone === 'function'){
-        this.onDone();
-      }
+      this.triggerEvent('onDone');
     }
   }
 
@@ -145,5 +151,11 @@ export default class PicturePuzzle {
         return i;
       }
     }
+  }
+
+  triggerEvent(eventName){
+    if (typeof this[eventName] === 'function'){
+        this[eventName]();
+      }
   }
 }
