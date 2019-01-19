@@ -5,12 +5,8 @@ window.addEventListener('load', init);
 
 function init() {
   const puzzle = new PicturePuzzle(document.querySelector('#puzzle-wrapper'),
-    'https://picsum.photos/400?random',
-    3, 400);
-
-  new PicturePuzzle(document.querySelector('#puzzle-wrapper'),
     'https://picsum.photos/600?random',
-    3, 400);
+    3, 600);
 
   const modal = document.querySelector('#success-modal');
   modal.style.display = 'block';
