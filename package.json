@@ -5,6 +5,7 @@
   "main": "PicturePuzzle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack",
     "start:dev": "webpack-dev-server"
   },
   "repository": {
