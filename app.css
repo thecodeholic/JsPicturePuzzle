@@ -1,3 +1,6 @@
+*{
+    box-sizing: border-box;
+}
 .puzzle-block{
     background-color: azure;
     display: inline-block;

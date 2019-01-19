@@ -5,8 +5,7 @@
   'use strict';
 
   const puzzle = new PicturePuzzle(document.body,
-    'https://icdn2.digitaltrends.com/image/dji-spark-drone-review-11-1500x1000.jpg?ver=1',
-    3);
-
+    'https://www.tesla.com/ns_videos/homepage/homepage-models.jpg?02018018018',
+    3, 600);
 
 })();

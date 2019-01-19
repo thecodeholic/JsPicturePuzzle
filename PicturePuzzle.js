@@ -1,4 +1,3 @@
-
 class PicturePuzzle {
   constructor(el, imageSrc, dimension, canvasWidth = 600) {
     this.el = el;
@@ -45,7 +44,7 @@ class PicturePuzzle {
   }
 
   shuffle() {
-    for (let i = this.cells.length - 2; i >= 0; i--) {
+    for (let i = this.cells.length - 1; i >= 0; i--) {
       let random = Math.floor(Math.random() * i);
       this.swapCells(i, random);
     }
@@ -69,13 +68,10 @@ class PicturePuzzle {
     this.cells[j].setPosition(j, animate);
   }
 
-  getEmpty() {
+  getEmptyIndex() {
     for (let i = 0; i < this.cells.length; i++) {
       if (this.cells[i].isEmpty) {
-        return {
-          i,
-          cell: this.cells[i]
-        }
+        return i;
       }
     }
   }
@@ -88,7 +84,7 @@ class Cell {
     this.el = document.createElement('div');
     this.isEmpty = false;
     this.index = index;
-    let { x, y } = this.convertToXY(index);
+    let {x, y} = this.convertToXY(index);
 
     if (index === this.puzzle.dimension * this.puzzle.dimension - 1) {
       this.isEmpty = true;
@@ -103,8 +99,15 @@ class Cell {
     this.el.style.height = this.puzzle.blockHeight + 'px';
     this.setPosition(index);
 
-    this.el.onclick = () => {
-      const { i, cell } = this.puzzle.getEmpty();
+    this.el.onclick = this.onCellClick.bind(this);
+  }
+
+  onCellClick() {
+    const i = this.puzzle.getEmptyIndex(),
+      emptyCell = this.puzzle.cells[i];
+    let {x: emptyX, y: emptyY} = emptyCell.getXY();
+    let {x, y} = this.convertToXY(this.index);
+    if ((x === emptyX || y === emptyY) && (Math.abs(x - emptyX) === 1 || Math.abs(y - emptyY) === 1)) {
       this.puzzle.swapCells(this.index, i, true);
     }
   }
@@ -118,56 +121,48 @@ class Cell {
   }
 
   setPosition(index, animate = false) {
-    let { x, y } = this.convertToXY(index);
+    let {x, y} = this.convertToXY(index);
 
     if (animate) {
       let finalLeft = Math.floor(x * this.puzzle.blockWidth);
       let finalTop = Math.floor(y * this.puzzle.blockHeight);
-      let movingSpeed = 5;
-
-      console.log(this.left, this.top);
-      console.log(finalLeft, finalTop);
-
       if (this.left < finalLeft) {
-        let interval = setInterval(() => {
-          this.left += movingSpeed;
-          if (this.left > finalLeft) {
-            clearInterval(interval);
-          }
-        }, 10);
-
+        this.animateProperty('left', finalLeft);
       } else if (this.left > finalLeft) {
-        let interval = setInterval(() => {
-          this.left -= movingSpeed;
-          // console.log(`${this.left} - ${finalLeft}`);
-          // console.log(`${this.top} - ${finalTop}`);
-          if (this.left < finalLeft) {
-            clearInterval(interval);
-          }
-        }, 10);
+        this.animateProperty('left', finalLeft);
       } else if (this.top < finalTop) {
-        let interval = setInterval(() => {
-          this.top += movingSpeed;
-          if (this.top > finalTop) {
-            clearInterval(interval);
-          }
-        }, 10);
+        this.animateProperty('top', finalTop);
       } else if (this.top > finalTop) {
-        
-        let interval = setInterval(() => {
-          this.top -= movingSpeed;
-          if (this.top < finalTop) {
-            clearInterval(interval);
-          }
-        }, 10);
-      } else {
-        clearInterval(interval);
+        this.animateProperty('top', finalTop);
       }
 
 
     } else {
       this.left = Math.floor(x * this.puzzle.blockWidth);
       this.top = Math.floor(y * this.puzzle.blockHeight);
+    }
+  }
+
+  animateProperty(propertyName, finalValue) {
+    let movingSpeed = 5;
+
+    if (this[propertyName] < finalValue) {
+      let interval = setInterval(() => {
+        this[propertyName] = Math.min(this[propertyName] + movingSpeed, finalValue);
+        if (this[propertyName] >= finalValue) {
+          clearInterval(interval);
+        }
+      }, 10);
+
+    } else if (this[propertyName] > finalValue) {
+      let interval = setInterval(() => {
+        this[propertyName] = Math.max(this[propertyName] - movingSpeed, finalValue);
+        // console.log(`${this.left} - ${finalLeft}`);
+        // console.log(`${this.top} - ${finalTop}`);
+        if (this[propertyName] <= finalValue) {
+          clearInterval(interval);
+        }
+      }, 10);
     }
   }
 
@@ -194,6 +189,10 @@ class Cell {
       y: Math.floor(index / this.puzzle.dimension),
       x: Math.floor(index % this.puzzle.dimension)
     };
+  }
+
+  getXY() {
+    return this.convertToXY(this.index);
   }
 
 }
