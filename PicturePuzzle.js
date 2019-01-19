@@ -1,7 +1,7 @@
 class PicturePuzzle {
   constructor(el, imageSrc, dimension, canvasWidth = 600) {
-    this.el = el;
-    this.wrapperEl = PicturePuzzle.createWrapper();
+    this.container = el;
+    this.el = PicturePuzzle.createWrapper();
     this.cells = [];
     this.imageSrc = imageSrc;
     this.dimension = dimension;
@@ -15,7 +15,7 @@ class PicturePuzzle {
     this.image.onload = this.setup.bind(this);
     this.image.src = imageSrc;
 
-    this.el.appendChild(this.wrapperEl);
+    this.container.appendChild(this.el);
   }
 
   static createWrapper() {
@@ -29,6 +29,8 @@ class PicturePuzzle {
     this.blockWidth = this.canvasWidth / this.dimension;
     this.blockHeight = this.canvasHeight / this.dimension;
 
+    this.el.style.width = `${this.canvasWidth}px`;
+    this.el.style.height = `${this.canvasHeight}px`;
     console.log(this.blockHeight, this.blockWidth);
 
     this.createCells();
@@ -81,7 +83,7 @@ class Cell {
   constructor(index, picturePuzzle) {
     this.puzzle = picturePuzzle;
     this.url = picturePuzzle.imageSrc;
-    this.el = document.createElement('div');
+    this.container = document.createElement('div');
     this.isEmpty = false;
     this.index = index;
     let {x, y} = this.convertToXY(index);
@@ -91,15 +93,15 @@ class Cell {
       return;
     }
 
-    this.el.classList.add('puzzle-block');
-    this.el.style.backgroundImage = `url(${this.url})`;
-    this.el.style.backgroundSize = `${this.puzzle.canvasWidth}px ${this.puzzle.canvasHeight}px`;
-    this.el.style.backgroundPosition = `${-x * this.puzzle.blockWidth}px ${-y * this.puzzle.blockHeight}px`;
-    this.el.style.width = this.puzzle.blockWidth + 'px';
-    this.el.style.height = this.puzzle.blockHeight + 'px';
+    this.container.classList.add('puzzle-block');
+    this.container.style.backgroundImage = `url(${this.url})`;
+    this.container.style.backgroundSize = `${this.puzzle.canvasWidth}px ${this.puzzle.canvasHeight}px`;
+    this.container.style.backgroundPosition = `${-x * this.puzzle.blockWidth}px ${-y * this.puzzle.blockHeight}px`;
+    this.container.style.width = this.puzzle.blockWidth + 'px';
+    this.container.style.height = this.puzzle.blockHeight + 'px';
     this.setPosition(index);
 
-    this.el.onclick = this.onCellClick.bind(this);
+    this.container.onclick = this.onCellClick.bind(this);
   }
 
   onCellClick() {
@@ -113,7 +115,7 @@ class Cell {
   }
 
   display() {
-    this.puzzle.wrapperEl.appendChild(this.el);
+    this.puzzle.el.appendChild(this.container);
   }
 
   setIndex(index) {
@@ -168,7 +170,7 @@ class Cell {
 
   set top(top) {
     this._top = top;
-    this.el.style.top = `${top}px`;
+    this.container.style.top = `${top}px`;
   }
 
   get top() {
@@ -177,7 +179,7 @@ class Cell {
 
   set left(left) {
     this._left = left;
-    this.el.style.left = `${left}px`;
+    this.container.style.left = `${left}px`;
   }
 
   get left() {

@@ -4,20 +4,20 @@
 
 function PicturePuzzle(domElement, url, dimension) {
   this.url = url;
-  this.wrapperEl = this.createWrapper();
+  this.el = this.createWrapper();
   this.image = null;
   this.dimension = dimension;
   this.matrix = [];
   this.canvasWidth = 600;
 
-  domElement.appendChild(this.wrapperEl);
+  domElement.appendChild(this.el);
 
   this.init();
 }
 
 PicturePuzzle.prototype = {
   init: function () {
-    this.wrapperEl.style.width = `${this.canvasWidth}px`;
+    this.el.style.width = `${this.canvasWidth}px`;
     this.image = new Image();
     this.image.onload = () => {
       console.log(this.image.width, this.image.height);
@@ -59,7 +59,7 @@ PicturePuzzle.prototype = {
         item.style.backgroundPosition = `${-j * blockWidth}px ${-i * blockHeight}px`;
         item.style.width = blockWidth + 'px';
         item.style.height = blockHeight + 'px';
-        this.wrapperEl.appendChild(item);
+        this.el.appendChild(item);
       }
     }
   }
