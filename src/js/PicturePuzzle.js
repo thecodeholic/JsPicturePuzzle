@@ -55,7 +55,7 @@ export default class PicturePuzzle {
   }
 
   shuffle() {
-    if (this.shuffleLevel === false){
+    if (this.dimension > 3){
       for (let i = this.cells.length - 1; i >= 0; i--) {
         let random = Math.floor(Math.random() * i);
         this.swapCells(i, random);

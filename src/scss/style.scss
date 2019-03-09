@@ -1,4 +1,5 @@
 @import "modal";
+@import "PicturePuzzle";
 
 * {
   box-sizing: border-box;
@@ -6,20 +7,4 @@
 
 body {
   padding: 50px;
-}
-
-.picture-puzzle {
-  //float: left;
-  margin: 0 auto;
-  position: relative;
-
-  .puzzle-block {
-    background-color: azure;
-    display: inline-block;
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    border: 1px solid white;
-  }
 }

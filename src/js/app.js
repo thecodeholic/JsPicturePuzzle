@@ -5,7 +5,7 @@ window.addEventListener('load', init);
 
 function init() {
   const puzzle = new PicturePuzzle(document.querySelector('#puzzle-wrapper'),
-    'https://picsum.photos/600?random',
+    'https://icdn2.digitaltrends.com/image/dji-spark-drone-review-11-1500x1000.jpg?ver=1',
     3, 600);
 
   const modal = document.querySelector('#success-modal');
