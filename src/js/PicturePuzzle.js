@@ -11,8 +11,6 @@ export default class PicturePuzzle {
     this.width = width;
     this.cells = [];
 
-    this.onFinished = () => {};
-
     this.init();
     const img = new Image();
     img.onload = () => {
@@ -58,29 +56,33 @@ export default class PicturePuzzle {
     }
   }
 
-  swapCells(i, j) {
+  swapCells(i, j){
     [this.cells[i], this.cells[j]] = [this.cells[j], this.cells[i]];
     this.cells[i].setPosition(i);
     this.cells[j].setPosition(j);
+    console.log(this.cells);
     if (this.isAssembled()){
-      this.onFinished();
+      console.log("Show good job dialog");
     }
-  }
-
-  findPosition(ind) {
-    return this.cells.findIndex(cell => cell.index === ind);
-  }
-
-  findEmpty() {
-    return this.cells.findIndex(cell => cell.isEmpty);
   }
 
   isAssembled(){
     for (let i = 0; i < this.cells.length; i++){
       if (i !== this.cells[i].index){
+        if (i === 6 && this.cells[i].index === 8 && this.cells[i+1].index === i + 1){
+          return true;
+        }
         return false;
       }
     }
     return true;
+  }
+
+  findPosition(ind){
+    return this.cells.findIndex(cell => cell.index === ind);
+  }
+
+  findEmpty(){
+    return this.cells.findIndex(cell => cell.isEmpty);
   }
 }

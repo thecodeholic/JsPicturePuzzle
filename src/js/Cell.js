@@ -1,8 +1,8 @@
 /**
  * Created by zura on 3/11/2019.
  */
-export default class Cell {
-  constructor(puzzle, ind) {
+export default class Cell{
+  constructor(puzzle, ind){
 
     this.isEmpty = false;
     this.index = ind;
@@ -13,7 +13,7 @@ export default class Cell {
     this.el = this.createDiv();
     puzzle.el.appendChild(this.el);
 
-    if (this.index === this.puzzle.dimmension * this.puzzle.dimmension - 1) {
+    if (this.index === this.puzzle.dimmension * this.puzzle.dimmension - 1){
       this.isEmpty = true;
       return;
     }
@@ -21,7 +21,7 @@ export default class Cell {
     this.setPosition(this.index);
   }
 
-  createDiv() {
+  createDiv(){
     const div = document.createElement('div');
     div.style.backgroundSize = `${this.puzzle.width}px ${this.puzzle.height}px`;
     div.style.border = '1px solid #FFF';
@@ -29,27 +29,27 @@ export default class Cell {
     div.style.width = `${this.width}px`;
     div.style.height = `${this.height}px`;
 
-    div.onclick = this.onCellSwap.bind(this);
+    div.onclick = () => {
+      console.log("Click ", this.index, );
+      console.log("Empty index ", );
+
+      const currentCellIndex = this.puzzle.findPosition(this.index);
+      const emptyCellIndex = this.puzzle.findEmpty();
+      const {x, y} = this.getXY(currentCellIndex);
+      const {x: emptyX, y: emptyY} = this.getXY(emptyCellIndex);
+      // console.log(x, y);
+      // console.log(emptyX, emptyY);
+      if ((x === emptyX || y === emptyY) &&
+        (Math.abs(x - emptyX) === 1 || Math.abs(y - emptyY) === 1)){
+        // console.log("I can swap");
+        this.puzzle.swapCells(currentCellIndex, emptyCellIndex);
+      }
+    };
 
     return div;
   }
 
-  onCellSwap() {
-    const actualIndex = this.puzzle.findPosition(this.index);
-    const emptyIndex = this.puzzle.findEmpty();
-    const empty = this.puzzle.cells[emptyIndex];
-    const {x, y} = this.getXY(actualIndex);
-    console.log(x, y);
-    const {x: emptyX, y: emptyY} = empty.getXY(emptyIndex);
-    console.log(emptyX, emptyY);
-
-    if ((x === emptyX || y === emptyY) &&
-      (Math.abs(x - emptyX) === 1 || Math.abs(y - emptyY) === 1)) {
-      this.puzzle.swapCells(actualIndex, emptyIndex);
-    }
-  }
-
-  setImage() {
+  setImage(){
     const {x, y} = this.getXY(this.index);
     const left = this.width * x;
     const top = this.height * y;
@@ -58,24 +58,25 @@ export default class Cell {
     this.el.style.backgroundPosition = `-${left}px -${top}px`;
   }
 
-  setPosition(index) {
+  setPosition(index){
     const {left, top} = this.getPositionFromIndex(index);
 
     this.el.style.left = `${left}px`;
     this.el.style.top = `${top}px`;
   }
 
-  getPositionFromIndex(index) {
+  getPositionFromIndex(index){
+    const {x, y} = this.getXY(index);
     return {
-      left: this.width * (index % this.puzzle.dimmension),
-      top: this.height * (Math.floor(index / this.puzzle.dimmension))
+      left: this.width * x,
+      top: this.height * y
     }
   }
 
-  getXY(ind) {
+  getXY(index){
     return {
-      x: ind % this.puzzle.dimmension,
-      y: Math.floor(ind / this.puzzle.dimmension)
-    };
+      x: index % this.puzzle.dimmension,
+      y: Math.floor(index / this.puzzle.dimmension)
+    }
   }
 }
