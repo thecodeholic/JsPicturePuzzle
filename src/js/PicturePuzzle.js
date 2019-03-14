@@ -59,22 +59,24 @@ export default class PicturePuzzle {
     this.shuffling = false;
   }
 
-  swapCells(i, j){
+  swapCells(i, j, animate) {
+
+
+    this.cells[i].setPosition(j, animate, i);
+    this.cells[j].setPosition(i);
     [this.cells[i], this.cells[j]] = [this.cells[j], this.cells[i]];
-    this.cells[i].setPosition(i);
-    this.cells[j].setPosition(j);
     console.log(this.cells);
-    if (!this.shuffling && this.isAssembled()){
-      if (this.onFinished && typeof this.onFinished === 'function'){
+    if (!this.shuffling && this.isAssembled()) {
+      if (this.onFinished && typeof this.onFinished === 'function') {
         this.onFinished.call(this);
       }
     }
   }
 
-  isAssembled(){
-    for (let i = 0; i < this.cells.length; i++){
-      if (i !== this.cells[i].index){
-        if (i === 6 && this.cells[i].index === 8 && this.cells[i+1].index === i + 1){
+  isAssembled() {
+    for (let i = 0; i < this.cells.length; i++) {
+      if (i !== this.cells[i].index) {
+        if (i === 6 && this.cells[i].index === 8 && this.cells[i + 1].index === i + 1) {
           return true;
         }
         return false;
@@ -83,11 +85,11 @@ export default class PicturePuzzle {
     return true;
   }
 
-  findPosition(ind){
+  findPosition(ind) {
     return this.cells.findIndex(cell => cell.index === ind);
   }
 
-  findEmpty(){
+  findEmpty() {
     return this.cells.findIndex(cell => cell.isEmpty);
   }
 }
