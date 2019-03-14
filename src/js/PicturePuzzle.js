@@ -10,6 +10,7 @@ export default class PicturePuzzle {
     this.imageSrc = imageSrc;
     this.width = width;
     this.cells = [];
+    this.shuffling = false;
 
     this.init();
     const img = new Image();
@@ -50,10 +51,12 @@ export default class PicturePuzzle {
   }
 
   shuffle() {
+    this.shuffling = true;
     for (let i = this.cells.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       this.swapCells(i, j);
     }
+    this.shuffling = false;
   }
 
   swapCells(i, j){
@@ -61,8 +64,10 @@ export default class PicturePuzzle {
     this.cells[i].setPosition(i);
     this.cells[j].setPosition(j);
     console.log(this.cells);
-    if (this.isAssembled()){
-      console.log("Show good job dialog");
+    if (!this.shuffling && this.isAssembled()){
+      if (this.onFinished && typeof this.onFinished === 'function'){
+        this.onFinished.call(this);
+      }
     }
   }
 
