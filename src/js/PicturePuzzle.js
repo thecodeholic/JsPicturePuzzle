@@ -23,7 +23,7 @@ export default class PicturePuzzle {
       console.log(img.width, img.height);
       /**
        * this.height      img.height
-       * -----------   =  ----------
+       * -----------   =  ---e-------
        * this.width       img.width
        */
       this.height = img.height * this.width / img.width;
@@ -52,7 +52,6 @@ export default class PicturePuzzle {
       this.cells.push(new Cell(this, i));
     }
     this.shuffle();
-    console.log(this.cells);
   }
 
   shuffle() {
@@ -70,7 +69,6 @@ export default class PicturePuzzle {
     this.cells[i].setPosition(j, animate, i);
     this.cells[j].setPosition(i);
     [this.cells[i], this.cells[j]] = [this.cells[j], this.cells[i]];
-    console.log(this.cells);
     if (!this.shuffling && this.isAssembled()) {
       if (this.onFinished && typeof this.onFinished === 'function') {
         this.onFinished.call(this);
