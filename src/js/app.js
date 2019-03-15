@@ -2,10 +2,20 @@ import '../scss/style.scss';
 import PicturePuzzle from './PicturePuzzle'
 
 const picturePuzzle = new PicturePuzzle(
-  document.querySelector('#puzzle-wrapper'),
+  document.querySelectorAll('#puzzle-wrapper > div')[0],
   'http://52.24.98.51/wp-content/uploads/2017/01/drone.jpg',
   600
 );
+const picturePuzzle2 = new PicturePuzzle(
+  document.querySelectorAll('#puzzle-wrapper > div')[1],
+  'https://www.tesla.com/sites/default/files/images/homepage/20180710/ms/homepage-models.jpg?20181117',
+  600,
+  4
+);
+
+picturePuzzle.onSwap = function(movements){
+  console.log(movements);
+};
 
 const modal = document.querySelector('#success-modal');
 modal.style.display = 'block';

@@ -26,8 +26,6 @@ export default class Cell {
     div.style.backgroundSize = `${this.puzzle.width}px ${this.puzzle.height}px`;
     div.style.border = '1px solid #FFF';
     div.style.position = 'absolute';
-    div.style.width = `${this.width}px`;
-    div.style.height = `${this.height}px`;
 
     div.onclick = () => {
       console.log("Click ", this.index,);
@@ -42,6 +40,10 @@ export default class Cell {
       if ((x === emptyX || y === emptyY) &&
         (Math.abs(x - emptyX) === 1 || Math.abs(y - emptyY) === 1)) {
         // console.log("I can swap");
+        this.puzzle.numberOfMovements++;
+        if (this.puzzle.onSwap && typeof this.puzzle.onSwap === 'function'){
+          this.puzzle.onSwap(this.puzzle.numberOfMovements);
+        }
         this.puzzle.swapCells(currentCellIndex, emptyCellIndex, true);
       }
     };
@@ -54,6 +56,9 @@ export default class Cell {
     const left = this.width * x;
     const top = this.height * y;
 
+    this.el.style.width = `${this.width}px`;
+    this.el.style.height = `${this.height}px`;
+
     this.el.style.backgroundImage = `url(${this.puzzle.imageSrc})`;
     this.el.style.backgroundPosition = `-${left}px -${top}px`;
   }
@@ -65,6 +70,8 @@ export default class Cell {
     if (animate) {
       if (left !== currentLeft) {
         this.animateLeft(currentLeft, left);
+      } else if (top !== currentTop){
+        this.animateTop(currentTop, top);
       }
     } else {
       this.el.style.left = `${left}px`;
@@ -73,12 +80,11 @@ export default class Cell {
   }
 
   animateLeft(left, destination) {
-    const animationDuration = 1000;
+    const animationDuration = 500;
     const frameRate = 10;
     let step = frameRate * Math.abs((destination - left)) / animationDuration;
 
     let id = setInterval(() => {
-      console.log("setInterval")
       if (left < destination) {
         left = Math.min(destination, left + step);
         if (left >= destination) {
@@ -93,6 +99,29 @@ export default class Cell {
 
 
       this.el.style.left = left + 'px';
+    }, frameRate)
+  }
+
+  animateTop(top, destination) {
+    const animationDuration = 500;
+    const frameRate = 10;
+    let step = frameRate * Math.abs((destination - top)) / animationDuration;
+
+    let id = setInterval(() => {
+      if (top < destination) {
+        top = Math.min(destination, top + step);
+        if (top >= destination) {
+          clearInterval(id)
+        }
+      } else {
+        top = Math.max(destination, top - step);
+        if (top <= destination) {
+          clearInterval(id)
+        }
+      }
+
+
+      this.el.style.top = top + 'px';
     }, frameRate)
   }
 

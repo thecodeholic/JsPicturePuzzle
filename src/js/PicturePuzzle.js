@@ -4,13 +4,18 @@
 import Cell from "./Cell";
 
 export default class PicturePuzzle {
-  constructor(el, imageSrc, width) {
+  constructor(el, imageSrc, width, dimmension = 3) {
     this.parentEl = el;
-    this.dimmension = 3;
+    this.dimmension = dimmension;
     this.imageSrc = imageSrc;
     this.width = width;
     this.cells = [];
     this.shuffling = false;
+    this.numberOfMovements = 0;
+
+    // events
+    this.onFinished = () => {};
+    this.onSwap = () => {};
 
     this.init();
     const img = new Image();
