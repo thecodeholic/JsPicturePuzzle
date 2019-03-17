@@ -2,24 +2,21 @@ const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: [
     './src/js/app.js'
   ],
-  watch: true,
-  watchOptions: {
-    aggregateTimeout: 300, // Process all changes which happened in this time into one rebuild
-    poll: 1000, // Check for changes every second,
-    ignored: /node_modules/,
-  },
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       template: path.resolve('./src/index.html')
     }),
-    new webpack.HotModuleReplacementPlugin()
+    new MiniCssExtractPlugin({
+      filename: "[name].[hash].css"
+    }),
   ],
   devtool: "source-maps",
   devServer: {
