@@ -6,17 +6,31 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: 'production',
-  entry: {
-    PicturePuzzle: './src/js/PicturePuzzle.js'
-  },
+  entry: [
+    './src/js/app.js'
+  ],
   output: {
     path: __dirname + '/dist'
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
+    new HtmlWebpackPlugin({
+      template: path.resolve('./src/index.html')
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].[hash].css"
+    }),
   ],
   module: {
     rules: [
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          "sass-loader"
+        ]
+      },
       {
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
@@ -26,7 +40,13 @@ module.exports = {
             presets: ['@babel/preset-env']
           }
         }
-      }
+      },
+      {
+        test: /\.html$/,
+        use: {
+          loader: 'html-loader',
+        }
+      },
     ]
   }
 

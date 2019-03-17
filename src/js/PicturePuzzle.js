@@ -96,3 +96,5 @@ export default class PicturePuzzle {
     return this.cells.findIndex(cell => cell.isEmpty);
   }
 }
+
+window.PicturePuzzle = window.PicturePuzzle || PicturePuzzle;
